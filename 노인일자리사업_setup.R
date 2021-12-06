@@ -1,11 +1,8 @@
 library(tidyverse)
 library(plotly)
-library(caret) # 데이터 처리 패키지
-library(corrplot)  # 상관계수 그래프 
 
 
-
-read.csv("00_jy/src/노인일자리사업 실태조사 참여노인 데이터 정보(2020).csv") -> old_raw
+read.csv("../../..R/00_jy/src/노인일자리사업 실태조사 참여노인 데이터 정보(2020).csv") -> old_raw
 
 
 
@@ -16,27 +13,19 @@ old_raw %>% select(ID,                   # 설문번호
                    SQ2,                  # 성별 (1:남, 2:여)
                    SQ3,                  # 연령 (1:60~64, 2:65~69, 3:70~74, 4:75~79, 5:80세 이상)
                    SQ11,                 # 지역 - code_region_b
-                   # SQ12,                 # 시군구(1:시, 2:군, 3:구) - code_region_m
-                   # SQ13,                 # 읍면동(1:읍, 2:면, 3:동) - code_region_s
                    SQ5,                  # 수행기관 및 유형 - institution
                    QA02,                 # 참여 유형(1:신규, 2:지속) - participation
                    QA04,                 # 사업지원 이유(1순위) - reason
-                   # QF04,                 # 사업 최초신청 전 경제상태 (1:매우나쁨, 2:나쁜 편, 3:보통, 4:좋은 편, 5:매우 좋음) - be_finances
                    QF0401,               # 사업 참여한 후 (현재) 경제상태 - af_finances
-                   # QC01,                 # 참여 전 건강상태(1:전혀 건강하지 않음, 2: 건강하지 않은 편, 3:보통, 4:건강한 편, 5:매우 건강함) - be_health
                    QC0101,               # 참여 후 건강상태 - af_health
                    BRQA01) %>%           # 사업유형 - type
             rename(sex = SQ2,       
                    ages = SQ3,          
                    code_region_b = SQ11,        
-                   # code_region_m = SQ12,        
-                   # code_region_s = SQ13,         
                    institution = SQ5,       
                    participation = QA02,
                    reason = QA04,
-                   # be_finances = QF04,
                    af_finances = QF0401,
-                   # be_health = QC01,
                    af_health = QC0101,
                    type = BRQA01) -> old    
     
@@ -166,7 +155,6 @@ all_pop %>% mutate(age = ifelse(age %in% c("60~64","65~69"), "60대",
                          ifelse(age %in% c("70~74","75~79"), "70대", 
                          ifelse(age %in% c("80~84","85_up"), "80대",NA)))) %>% 
             filter(!is.na(age)) -> all_pop1 
-            # group_by(age) 
 
 
 
@@ -181,8 +169,6 @@ sapply(all_pop1[5:6,], sum) -> eight
 
 as.data.frame(rbind(six, sev, eight)) -> all_pop2
 row.names(all_pop2) <- c("60대", "70대", "80대")
-
-
 
 
 
@@ -202,25 +188,7 @@ all_old[,-4] -> population
 
 
 
-
-
-
 save(old,old_new,list_institution,list_reason,list_region_b,list_type,all_pop2,population,file = "old.rda")
 
-
-
-
-
-
-
-
-
-# 상관계수 연습(전체 인구-> 참여자 수로 연습함)
-    
-population %>% select(total,count) %>% 
-    cor() %>% round(2) %>% print() -> pop_cor
-
-cor(population$total, population$count)
-corrplot(pop_cor, method = "pie", tl.srt = 45)
 
 
