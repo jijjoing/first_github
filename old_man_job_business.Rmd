@@ -38,14 +38,6 @@ subset(population)
 ```
 
 
-
-
-
-
-
-
-
-
 ### 참여유형별 노인 일자리 사업 성별에 따른 참여율
 ```{r}
 (
@@ -59,10 +51,6 @@ old_new %>% group_by(participation_x,sex) %>%
             xlab("성별") + ylab("참여율")
 ) %>% ggplotly()
 ```
-
-
-
-
 
 
 ### 노인일자리사업 연령에 따른 참여율
@@ -80,11 +68,6 @@ old_new %>% filter(ages_x!="90대") %>%
             xlab("연령") + ylab("참여율")
 ) %>% ggplotly()
 ```
-
-
-
-
-
 
 
 ### 지역별 노인일자리사업 참여율
@@ -105,11 +88,6 @@ old_new %>% group_by(code_region_b) %>%
 ```
 
 
-
-
-
-
-
 ### 수행기관별 노인일자리사업 참여율
 ```{r}
 (
@@ -128,14 +106,6 @@ old_new %>% group_by(institution) %>%
 ```
 
 
-
-
-
-
-
-
-
-
 ### 사업지원 이유
 ```{r}
 (
@@ -151,6 +121,7 @@ old_new %>% group_by(reason) %>%
             xlab(" ") + ylab("빈도")
 ) %>% ggplotly()
 ```
+
 
 ### 사업 유형에 따른 참여자
 ```{r}
@@ -170,16 +141,6 @@ old_new %>% group_by(type) %>%
 ```
 
 
-
-
-
-
-
-
-
-
-
-
 ### 노인일자리사업 참여 후 경제 상태(%)
 ```{r}
 table(old_new$af_finances)
@@ -195,16 +156,6 @@ old_new %>% filter(!is.na(af_finances_x)) %>%
             ggtitle("노인일자리사업 참여 후 경제 상태") + xlab("구분") + ylab("%")
 ) %>% ggplotly()
 ```
-
-
-
-
-
-
-
-
-
-
 
 
 ### 노인일자리사업 참여 후 건강 상태(%)
