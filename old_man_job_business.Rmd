@@ -24,17 +24,14 @@ RColorBrewer::brewer.pal.info
 
 ### 전국 연령에 따른 참여자 비율
 ```{r}
+(
 population %>% mutate(ages = c('60대', '70대', '80대')) %>% 
-               # select(total,count) %>%
                mutate(pct = round((count/total)*100,3)) %>% print() %>% 
                ggplot(aes(x = ages, y = count, fill=ages)) + geom_bar(stat ='identity') +
                ggtitle("전국 연령에 따른 참여자 비율") +
                geom_text(aes(label=pct),position = position_stack(vjust=0.5)) +
                xlab("성별") + ylab("참여자 수")
-
-t(population) %>% as.data.frame() ->p
-
-subset(population)
+) %>% ggplotly()
 ```
 
 
