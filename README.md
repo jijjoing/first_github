@@ -14,7 +14,6 @@ RColorBrewer::brewer.pal.info
 
 
 
-
 ### 전국 연령에 따른 참여자 비율
 population %>% mutate(ages = c('60대', '70대', '80대')) %>% 
                mutate(pct = round((count/total)*100,3)) %>% print() %>% 
