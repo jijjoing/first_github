@@ -22,7 +22,6 @@ RColorBrewer::brewer.pal.info
 ```
 
 
-
 ### 전국 연령에 따른 참여자 비율
 ```{r}
 (
@@ -34,7 +33,8 @@ population %>% mutate(ages = c('60대', '70대', '80대')) %>%
                xlab("성별") + ylab("참여자 수")
 ) %>% ggplotly()
 ```
-
+screenshot
+![screensh](D:\1. tjoeun\03_Src\Pf\first_github\screensh/전국 연령에 따른 참여자 비율.png)
 
 ### 참여유형별 노인 일자리 사업 성별에 따른 참여율
 ```{r}
