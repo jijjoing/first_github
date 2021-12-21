@@ -1,3 +1,135 @@
-# first_github
+# 2020년 노인 일자리 사업 분류 분석
 
-This my first project folder.
+
+library(tidyverse)
+library(plotly)
+
+load("../../R/old.rda")
+
+library(RColorBrewer)
+RColorBrewer::display.brewer.all(type = "div")
+RColorBrewer::display.brewer.all(type = "qual")
+RColorBrewer::display.brewer.all(type = "seq")
+RColorBrewer::brewer.pal.info
+
+
+
+
+### 전국 연령에 따른 참여자 비율
+population %>% mutate(ages = c('60대', '70대', '80대')) %>% 
+               mutate(pct = round((count/total)*100,3)) %>% print() %>% 
+               ggplot(aes(x = ages, y = count, fill=ages)) + geom_bar(stat ='identity') +
+               ggtitle("전국 연령에 따른 참여자 비율") +
+               geom_text(aes(label=pct),position = position_stack(vjust=0.5)) +
+               xlab("성별") + ylab("참여자 수")
+
+screenshot
+![screensh](D:\1. tjoeun\03_Src\Pf\first_github\screensh/전국 연령에 따른 참여자 비율.png)
+
+
+
+### 참여유형별 노인 일자리 사업 성별에 따른 참여율
+old_new %>% group_by(participation_x,sex) %>% 
+            summarise(count = n()) %>% 
+            mutate(total = sum(count)) %>% 
+            mutate(pct = round((count/total)*100,1)) %>% print() %>% 
+            ggplot(aes(x = sex, y = pct, fill=participation_x)) + geom_bar(stat ='identity') +
+            ggtitle("참여유형별 노인일자리사업 성별에 따른 참여율") +
+            geom_text(aes(label=pct),position = position_stack(vjust=0.5)) +
+            xlab("성별") + ylab("참여율")
+
+
+### 노인일자리사업 연령에 따른 참여율
+old_new %>% filter(ages_x!="90대") %>% 
+            group_by(ages_x) %>% 
+            summarise(count = n()) %>% 
+            mutate(total = sum(count)) %>% 
+            mutate(pct = round((count/total)*100,1)) %>% 
+            print() %>% 
+            ggplot(aes(x = ages_x, y = count, fill=ages_x)) + geom_bar(stat ='identity') +
+            ggtitle("노인일자리사업 연령에 따른 참여율") +
+            geom_text(aes(label=pct),position = position_stack(vjust=1.05)) +
+            xlab("연령") + ylab("참여율")
+
+
+### 지역별 노인일자리사업 참여율
+sample(c(brewer.pal(12, "Set3"), brewer.pal(4, "Dark2"))) -> a
+old_new %>% group_by(code_region_b) %>% 
+            summarise(count=n()) %>% 
+            mutate(total = sum(count)) %>% 
+            mutate(pct = round((count/total)*100,1)) %>% 
+            inner_join(list_region_b) %>% print() %>% 
+            ggplot(aes(reorder(x=code_region_br,abs(count)),y=count)) +
+            geom_bar(stat = "identity", fill=a) +
+            ggtitle("지역별 노인일자리사업 참여율") +
+            geom_text(aes(label=pct),position = position_stack(vjust=0.5),size=3) +
+            coord_flip() + xlab("지역") + ylab("참여율") 
+
+
+### 수행기관별 노인일자리사업 참여율
+old_new %>% group_by(institution) %>% 
+            summarise(count = n()) %>% 
+            mutate(total = sum(count)) %>% 
+            mutate(pct = round((count/total)*100,1)) %>% 
+            arrange(desc(count)) %>% 
+            inner_join(list_institution) %>% print() %>% 
+            ggplot(aes(reorder(institution_r,desc(count)),count)) + 
+            geom_bar(stat = "identity", fill = sample(brewer.pal(8, "Dark2"))) +
+            ggtitle("수행기관별 노인일자리사업 참여율") +
+            geom_text(aes(label=pct), position = position_stack(vjust = 0.5), size=3) +
+            xlab("수행기관") + ylab("참여율")
+
+
+### 사업지원 이유
+old_new %>% group_by(reason) %>% 
+            summarise(count = n()) %>% 
+            arrange(desc(count)) %>% 
+            inner_join(list_reason) %>% print() %>% 
+            ggplot(aes(reorder(reason_r,abs(count)), count)) + 
+            geom_bar(stat = 'identity', fill = sample(brewer.pal(7,"Accent"))) +
+            geom_text(aes(label=count), position = position_stack(vjust = 0.5), size=3) +
+            coord_flip() + 
+            ggtitle("사업지원 이유") +
+            xlab(" ") + ylab("빈도")
+
+
+### 사업 유형에 따른 참여자
+old_new %>% group_by(type) %>% 
+            summarise(count = n()) %>% 
+            inner_join(list_type) %>% 
+            arrange(desc(count)) %>% head(10) %>% print() %>% 
+            ggplot(aes(reorder(type_r,abs(count)),count)) + 
+            geom_bar(stat = 'identity', fill = sample(brewer.pal(10, "Paired"))) +
+            coord_flip() + geom_text(aes(label=count), position = position_stack(vjust = 0.5), size=3) +
+            ggtitle("사업 유형에 따른 참여자") +
+            xlab("사업유형") + ylab("빈도")
+    
+
+
+### 노인일자리사업 참여 후 경제 상태(%)
+table(old_new$af_finances)
+
+old_new %>% filter(!is.na(af_finances_x)) %>% 
+            group_by(af_finances_x) %>% 
+            summarise(count = n()) %>% 
+            arrange(desc(count)) %>% 
+            mutate(total = sum(count)) %>% 
+            mutate(pct = round((count/total)*100,1)) %>% print() %>% 
+            ggplot(aes(af_finances_x, count,fill = af_finances_x)) + geom_bar(stat = 'identity') +
+            geom_text(aes(label=pct), position = position_stack(vjust = 0.5), size=4) +
+            ggtitle("노인일자리사업 참여 후 경제 상태") + xlab("구분") + ylab("%")
+
+
+### 노인일자리사업 참여 후 건강 상태(%)
+table(old_new$af_health)
+
+old_new %>% filter(!is.na(af_health_x)) %>% 
+            group_by(af_health_x) %>% 
+            summarise(count = n()) %>% 
+            arrange(desc(count)) %>% 
+            mutate(total = sum(count)) %>% 
+            mutate(pct = round((count/total)*100,1)) %>% print() %>% 
+            ggplot(aes(af_health_x, count, fill = af_health_x)) + geom_col() +
+            geom_text(aes(label=pct), position = position_stack(vjust = 1.05), size=4) +
+            ggtitle("노인일자리사업 참여 후 건강 상태") + xlab("구분") + ylab("%")
+
