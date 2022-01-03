@@ -5,7 +5,6 @@ library(plotly)
 read.csv("../../..R/00_jy/src/노인일자리사업 실태조사 참여노인 데이터 정보(2020).csv") -> old_raw
 
 
-
 length(names(old_raw))
 str(old_raw)
 
