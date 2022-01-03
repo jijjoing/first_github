@@ -75,7 +75,6 @@ old_new %>% group_by(code_region_b) %>%
             coord_flip() + xlab("지역") + ylab("참여율") 
 ```
 
-
 ### 수행기관별 노인일자리사업 참여율
 ```{r}
 old_new %>% group_by(institution) %>% 
