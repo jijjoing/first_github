@@ -153,3 +153,4 @@ old_new %>% filter(!is.na(af_health_x)) %>%
             ggtitle("노인일자리사업 참여 후 건강 상태") + xlab("구분") + ylab("%")
 ```
 
+
